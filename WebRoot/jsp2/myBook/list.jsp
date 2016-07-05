@@ -1,0 +1,238 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+     <base href="<%=basePath%>">
+    <title>尚学堂图书馆</title>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap-responsive.css">
+    <link rel="stylesheet" type="text/css" href="stylesheets/theme.css">
+    <link rel="stylesheet" href="lib/font-awesome/css/font-awesome.css">
+
+    <script src="lib/jquery-1.8.1.min.js" type="text/javascript"></script>
+
+    <!-- Demo page code -->
+    
+    <style type="text/css">
+        #line-chart {
+            height:300px;
+            width:800px;
+            margin: 0px auto;
+            margin-top: 1em;
+        }
+        .brand { font-family: georgia, serif; }
+        .brand .first {
+            color: #ccc;
+            font-style: italic;
+        }
+        .brand .second {
+            color: #fff;
+            font-weight: bold;
+        }
+    </style>
+
+
+  </head>
+
+  <body> 
+  <!--<![endif]-->
+    
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="container-fluid">
+                <ul class="nav pull-right">
+                    
+                    <li id="fat-menu" class="dropdown">
+                        <a href="#" id="drop3" role="button" class="dropdown-toggle" data-toggle="dropdown">
+                      <i class="icon-user"></i>${sessionScope.currentUser.name } 
+                            <i class="icon-caret-down"></i>
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li><a tabindex="-1" href="login_logOut.action">退出</a></li>
+                        </ul>
+                    </li>
+                    
+                </ul>
+                 <a class="brand" href="jsp/login.jsp"><span class="first">尚学堂</span> <span class="second">图书馆</span></a>
+            </div>
+        </div>
+    </div>
+    
+
+    <div class="container-fluid">
+        
+        <div class="row-fluid">
+            <div class="span3">
+                <div class="sidebar-nav">
+                  <div class="nav-header" data-toggle="collapse" data-target="#dashboard-menu">图书馆</div>
+                    <ul id="dashboard-menu" class="nav nav-list collapse in">
+                        <li ><a href="book_BookBorrowlist.action">尚学堂图书馆入口</a></li>
+
+                    </ul>
+                <div class="nav-header" data-toggle="collapse" data-target="#accounts-menu">书包</div>
+                <ul id="dashboard-menu" class="nav nav-list collapse in">
+         <li  class="active" > <a href="myBook_list.action">我的书包</a></li>
+                  
+                        
+                </ul>
+                <div class="nav-header" data-toggle="collapse" data-target="#settings-menu">记录</div>
+                <ul id="dashboard-menu" class="nav nav-list collapse in">
+                 <li >  <a href="record_studentList.action?user.id=${user.id}">我的借书还书记录</a></li>
+                      
+                </ul>
+            </div>
+        </div>
+        <div class="span9">
+        
+   
+   		<h1 class="page-title">我的书包</h1>
+				
+		
+
+				<div class="well">
+					<table class="table">
+						<thead>
+							<tr>
+		<th>书籍id</th>
+  	<th>书名</th>
+  	<th>价格</th>
+  	<th>作者</th>
+  	<th>借书用户</th>
+  	<th>借书日期</th>
+ 
+  	<th>操作</th>
+								<th style="width: 26px;"></th>
+							</tr>
+						</thead>
+						<tbody>
+						<c:forEach items="${list }" var="bean">
+    <tr>
+  	<td>${bean.bookId }</td>
+  	<td>${bean.bookName }</td>
+
+  	<td>${bean.price }</td>
+  	<td>${bean.author }</td>
+  	  	<td>${bean.userName}</td>
+  	<td>${bean.date }</td>
+  	
+  	<td><a href="myBook_backBook.action?book.id=${bean.bookId }&user.id=${user.id}">还书</a></td>
+  </tr>
+  </c:forEach>
+
+						</tbody>
+					</table>
+				</div>
+
+
+				<div class="pagination">
+					<script type="text/javascript">
+						function deleteStudent(id) {
+							$("#pid").val(id);
+						}
+
+						function pageFunction(url) {
+							location.href = url + '&'
+									+ $('#searchForm').serialize();
+						}
+					</script>
+					<ul>
+						<li><a
+							href="javascript:pageFunction('stu?action=list&currentPage=${page.currentPage-1 }')">Prev</a></li>
+						<c:choose>
+							<%-- 只要总页数小于10直接显示所有页数 --%>
+							<c:when test="${page.totalPage<10 }">
+								<c:forEach begin="1" end="${page.totalPage }" var="pc" step="1">
+									<li><a
+										href="javascript:pageFunction('stu?action=list&currentPage=${pc }')">${pc }</a></li>
+								</c:forEach>
+							</c:when>
+							<%-- 总页数大于10 --%>
+							<c:otherwise>
+								<%--当前页在头部  小于5--%>
+								<c:if test="${page.currentPage<5}">
+									<c:forEach begin="1" end="9" var="pc" step="1">
+										<li><a
+											href="javascript:pageFunction('stu?action=list&currentPage=${pc }')">${pc }</a></li>
+									</c:forEach>
+								</c:if>
+								<%-- 当前页在中间 --%>
+								<c:if
+									test="${page.currentPage+4<=page.totalPage and page.currentPage-4>0}">
+									<c:forEach begin="${page.currentPage-4}"
+										end="${page.currentPage+4 }" var="pc" step="1">
+										<li><a
+											href="javascript:pageFunction('stu?action=list&currentPage=${pc }')">${pc }</a></li>
+									</c:forEach>
+								</c:if>
+								<%-- 当前页在尾部 currentPage+4 大于 totalPage --%>
+								<c:if test="${page.currentPage+4>page.totalPage}">
+									<c:forEach begin="${page.totalPage-8 }"
+										end="${page.totalPage }" var="pc" step="1">
+										<li><a
+											href="javascript:pageFunction('stu?action=list&currentPage=${pc }')">${pc }</a></li>
+									</c:forEach>
+								</c:if>
+							</c:otherwise>
+						</c:choose>
+						<li><a
+							href="javascript:pageFunction('stu?action=list&currentPage=${page.currentPage+1 }')">Next</a></li>
+					</ul>
+				</div>
+
+
+<div class="modal small hide fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">上传批量学生文件，格式为xls</h3>
+    </div>
+    
+	    <div class="modal-body">
+	    <form id="uploadForm" action="stuImport" method="post" enctype="multipart/form-data">
+			<input type="file" name="file"/>
+	   	</form>
+	    </div>
+	    <div class="modal-footer">
+	    	<input form="uploadForm" class="btn" type="submit" value="导入"/>
+	    </div>
+	    
+    </div>
+</div>
+
+</div>
+
+<footer>
+	<hr>
+	<!-- Purchase a site license to remove this link from the footer: http://www.portnine.com/bootstrap-themes -->
+	<p class="pull-right">
+		A <a href="http://www.portnine.com/bootstrap-themes" target="_blank">Free
+			Bootstrap Theme</a> by <a href="http://www.portnine.com" target="_blank">Portnine</a>
+	</p>
+
+
+	<p>
+		&copy; 2012 <a href="http://www.portnine.com">Portnine</a>
+	</p>
+</footer>
+
+<!-- Le javascript
+    ================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="lib/bootstrap/js/bootstrap.js"></script>
+
+</body>
+</html>
+   
+   
+   

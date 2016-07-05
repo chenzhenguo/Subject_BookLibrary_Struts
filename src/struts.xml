@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+<!-- <struts>
+		<package name="default" extends="struts-default"  namespace="/">
+			<action name="list" class="cn.sxt.action.BookAction" method="list">
+				<result>/list.jsp</result>
+			</action>
+			
+			<action name="delete" class="cn.sxt.action.BookAction" method="delete">
+				<result>/success.jsp</result>
+			</action>
+			
+			<action name="toUpdate" class="cn.sxt.action.BookAction" method="toUpdate">
+				<result>/update.jsp</result>
+			</action>
+			<action name="update" class="cn.sxt.action.BookAction" method="update">
+			
+			<result>/success.jsp</result>
+			</action>
+			<action name="add" class="cn.sxt.action.BookAction" method="add">
+			
+			<result>/success.jsp</result>
+			</action>
+			
+		</package>
+</struts> -->
+
+
+
+
+
+<struts>
+
+	<package name="default" extends="struts-default"  namespace="/">
+		<interceptors>
+			<interceptor name="loginInterceptor" class="cn.sxt.interceptor.LoginInterceptor"></interceptor>
+		   	<interceptor name="json" class="org.apache.struts2.json.JSONInterceptor"/>
+			<interceptor-stack name="myStack">
+				<interceptor-ref name="json"></interceptor-ref>
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+				<interceptor-ref name="loginInterceptor"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		
+		
+		<default-interceptor-ref name="myStack"></default-interceptor-ref>
+		
+		<global-results >
+		<result name="login"> jsp2/login.jsp</result>
+		</global-results>
+		
+		<action  name="login_*" class="cn.sxt.action.LoginAction" method="{1}">
+		<result name="loginSuccess">jsp2/loginSuccess.jsp</result>
+		<result name="loginStudentSuccess">jsp2/loginStudenSuccess.jsp</result>
+		<result name="logOutSuccess">jsp2/logOutSuccess.jsp</result>
+		
+		</action>
+		
+	
+		
+		<action name="book_*" class="cn.sxt.action.BookAction" method="{1}">
+			<result name="list">jsp2/book/list.jsp</result>
+			<result name="BookBorrowlist">/jsp2/borrow/borrow.jsp</result>
+			<result name="borrowSuccesss">/jsp2/borrow/success.jsp</result>
+			<result name="borrowError">/jsp2/borrow/error.jsp</result>
+			<result name="update">jsp2/book/update.jsp</result>
+			<result name="error">jsp2/book/error.jsp</result>
+			<result name="success">jsp2/book/success.jsp</result>
+			<result name="toAdd">jsp2/book/toAdd.jsp</result>
+			<result name="borrow">/jsp2/borrow/borrow.jsp</result>
+			<result name="index">/jsp2/index.jsp</result>
+			<result name="studentIndex">/jsp2/StudentIndex.jsp</result>
+	
+			
+			
+			
+		</action>
+		
+		
+		
+		<action name="user_*"  class="cn.sxt.action.UserAction" method="{1}">
+			<result name="list">jsp2/user/list.jsp  </result>
+			<result name="success">jsp2/user/success.jsp</result>
+			<result name ="error">jsp2/user/error.jsp</result>
+			<result name="update">/jsp2/user/update.jsp</result>
+		</action>
+		<action name="category_*"  class="cn.sxt.action.CategoryAction" method="{1}">
+			<result name="list">jsp2/category/list.jsp  </result>
+			<result name="success">jsp2/category/success.jsp</result>
+			<result name ="error">jsp2/category/error.jsp</result>
+			<result name="update">/jsp2/category/update.jsp</result>
+		</action>
+		<action name="record_*" class="cn.sxt.action.RecordAction" method="{1}">
+			<result name="list">/jsp2/record/list.jsp</result>
+			<result name="studentList">/jsp2/record/studentList.jsp</result>
+			
+		</action>
+		<action name="myBook_*"  class="cn.sxt.action.MyBookAction" method="{1}">
+			<result name="list">jsp2/myBook/list.jsp  </result>
+			<result name="success">jsp2/myBook/success.jsp</result>
+			<result name ="error">jsp2/myBook/error.jsp</result>
+		</action>
+</package>
+</struts>
+
+
+
+
+
+
+	
